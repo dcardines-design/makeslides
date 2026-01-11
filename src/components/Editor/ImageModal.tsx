@@ -359,6 +359,28 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
           {/* Collection Tab */}
           {activeSource === 'collection' && (
             <>
+              <div className="mb-4">
+                <label
+                  className="text-[10px] text-[#8A8A8A] uppercase font-medium mb-2 block"
+                  style={{ fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '1.2px' }}
+                >
+                  Add Image URL
+                </label>
+                <button
+                  onClick={() => {
+                    const url = prompt('Paste image URL:');
+                    if (url) saveToCollection(url);
+                  }}
+                  className="w-full px-4 py-3 bg-transparent border border-dashed border-[#2B2B2B] rounded-[10px] text-sm text-[#7D7D7D] hover:text-white hover:border-[#3B1CD1] transition-colors flex items-center justify-center gap-2"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                  </svg>
+                  Paste Pinterest/Image URL
+                </button>
+              </div>
+
               <div className="mb-2">
                 <label
                   className="text-[10px] text-[#8A8A8A] uppercase font-medium"

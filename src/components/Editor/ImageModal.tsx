@@ -231,7 +231,8 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] text-white text-sm font-medium hover:bg-[#2B2B2B] transition-colors"
+                    className="px-[14px] py-[8px] bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#2B2B2B] transition-colors"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
                     SEARCH
                   </button>
@@ -299,7 +300,8 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
                   <button
                     type="submit"
                     disabled={pinterestLoading}
-                    className="px-4 py-2 bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] text-white text-sm font-medium hover:bg-[#2B2B2B] transition-colors disabled:opacity-50"
+                    className="px-[14px] py-[8px] bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#2B2B2B] transition-colors disabled:opacity-50"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
                     {pinterestLoading ? '...' : 'GO'}
                   </button>
@@ -402,9 +404,10 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
           {selectedImage && activeSource !== 'collection' && (
             <button
               onClick={() => saveToCollection(selectedImage)}
-              className="flex items-center gap-2 px-4 py-2 bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] text-white text-sm font-medium hover:bg-[#2B2B2B] transition-colors"
+              className="flex items-center gap-2 px-[14px] py-[8px] bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#2B2B2B] transition-colors"
+              style={{ fontFamily: 'Space Grotesk, sans-serif' }}
             >
-              <Plus size={14} />
+              <Plus size={12} />
               SAVE TO COLLECTION
             </button>
           )}

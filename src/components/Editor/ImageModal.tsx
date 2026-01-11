@@ -221,17 +221,17 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
                 >
                   Photo Tags
                 </label>
-                <form onSubmit={handleSearch} className="flex items-stretch bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] overflow-hidden focus-within:border-[#3B1CD1]">
+                <form onSubmit={handleSearch} className="flex items-stretch bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] overflow-hidden focus-within:border-[#3B1CD1]">
                   <input
                     type="text"
                     value={searchTags}
                     onChange={(e) => setSearchTags(e.target.value)}
                     placeholder="fitness, gym, faceless, aesthetic"
-                    className="flex-1 px-4 py-2 bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
+                    className="flex-1 px-5 py-3 bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
                   />
                   <button
                     type="submit"
-                    className="px-[14px] py-[8px] bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors"
+                    className="px-[14px] py-3 bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
                     Search
@@ -289,18 +289,18 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
                 >
                   Pinterest URL
                 </label>
-                <form onSubmit={handlePinterestSubmit} className="flex items-stretch bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] overflow-hidden focus-within:border-[#3B1CD1]">
+                <form onSubmit={handlePinterestSubmit} className="flex items-stretch bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] overflow-hidden focus-within:border-[#3B1CD1]">
                   <input
                     type="text"
                     value={pinterestUrl}
                     onChange={(e) => setPinterestUrl(e.target.value)}
                     placeholder="Paste Pinterest search URL..."
-                    className="flex-1 px-4 py-2 bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
+                    className="flex-1 px-5 py-3 bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
                   />
                   <button
                     type="submit"
                     disabled={pinterestLoading}
-                    className="px-[14px] py-[8px] bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors disabled:opacity-50"
+                    className="px-[14px] py-3 bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors disabled:opacity-50"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
                     {pinterestLoading ? '...' : 'Go'}

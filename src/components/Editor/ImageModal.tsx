@@ -289,23 +289,26 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
                 >
                   Pinterest URL
                 </label>
-                <form onSubmit={handlePinterestSubmit} className="flex gap-2">
+                <form onSubmit={handlePinterestSubmit} className="flex items-stretch bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] overflow-hidden focus-within:border-[#3B1CD1]">
                   <input
                     type="text"
                     value={pinterestUrl}
                     onChange={(e) => setPinterestUrl(e.target.value)}
                     placeholder="Paste Pinterest search URL..."
-                    className="flex-1 px-4 py-2 bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] text-sm text-white placeholder-[#7D7D7D] focus:outline-none focus:border-[#3B1CD1]"
+                    className="flex-1 px-4 py-2 bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
                   />
                   <button
                     type="submit"
                     disabled={pinterestLoading}
-                    className="px-[14px] py-[8px] bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#2B2B2B] transition-colors disabled:opacity-50"
+                    className="px-[14px] py-[8px] bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors disabled:opacity-50"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
-                    {pinterestLoading ? '...' : 'GO'}
+                    {pinterestLoading ? '...' : 'Go'}
                   </button>
                 </form>
+                <p className="text-[10px] text-[#555] mt-2">
+                  Copy URL from Pinterest search or board page
+                </p>
               </div>
 
               <div className="mb-2">

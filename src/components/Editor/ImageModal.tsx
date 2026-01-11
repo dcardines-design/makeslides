@@ -366,19 +366,34 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
                 >
                   Add Image URL
                 </label>
-                <button
-                  onClick={() => {
-                    const url = prompt('Paste image URL:');
-                    if (url) saveToCollection(url);
-                  }}
-                  className="w-full px-4 py-3 bg-transparent border border-dashed border-[#2B2B2B] rounded-[10px] text-sm text-[#7D7D7D] hover:text-white hover:border-[#3B1CD1] transition-colors flex items-center justify-center gap-2"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <div className="relative">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7D7D7D]"
+                  >
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                   </svg>
-                  Paste Pinterest/Image URL
-                </button>
+                  <input
+                    type="text"
+                    placeholder="Paste Pinterest/Image URL"
+                    className="w-full pl-11 pr-4 py-3 bg-transparent border border-dashed border-[#2B2B2B] rounded-[10px] text-sm text-white placeholder-[#7D7D7D] focus:outline-none focus:border-[#3B1CD1] transition-colors"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const input = e.target as HTMLInputElement;
+                        if (input.value.trim()) {
+                          saveToCollection(input.value.trim());
+                          input.value = '';
+                        }
+                      }
+                    }}
+                  />
+                </div>
               </div>
 
               <div className="mb-2">

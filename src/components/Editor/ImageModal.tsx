@@ -227,11 +227,11 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
                     value={searchTags}
                     onChange={(e) => setSearchTags(e.target.value)}
                     placeholder="fitness, gym, faceless, aesthetic"
-                    className="flex-1 px-5 py-3 bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
+                    className="flex-1 px-[18px] py-[10px] bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
                   />
                   <button
                     type="submit"
-                    className="px-[14px] py-3 bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors"
+                    className="px-[14px] py-[10px] bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
                     Search
@@ -295,12 +295,12 @@ export default function ImageModal({ isOpen, onClose, onSave }: ImageModalProps)
                     value={pinterestUrl}
                     onChange={(e) => setPinterestUrl(e.target.value)}
                     placeholder="Paste Pinterest search URL..."
-                    className="flex-1 px-5 py-3 bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
+                    className="flex-1 px-[18px] py-[10px] bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
                   />
                   <button
                     type="submit"
                     disabled={pinterestLoading}
-                    className="px-[14px] py-3 bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors disabled:opacity-50"
+                    className="px-[14px] py-[10px] bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors disabled:opacity-50"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   >
                     {pinterestLoading ? '...' : 'Go'}

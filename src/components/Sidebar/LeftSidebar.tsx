@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useEditorStore, GeneratedSlideContent } from '@/stores/editorStore';
 import { Sparkles, Loader2, ImageIcon, Clock, Trash2, Type, ChevronUp } from 'lucide-react';
 import TextStyleModal from '@/components/Editor/TextStyleModal';
+import ImageModal from '@/components/Editor/ImageModal';
 import TikTokPanel from '@/components/TikTok/TikTokPanel';
 
 interface CollectionImage {
@@ -27,6 +28,7 @@ export default function LeftSidebar() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [textStyleModalOpen, setTextStyleModalOpen] = useState(false);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
   const [tiktokExpanded, setTiktokExpanded] = useState(true);
   const { generateSlidesFromAI, loadFromHistory, isGenerating, slides } = useEditorStore();
 
@@ -183,13 +185,9 @@ export default function LeftSidebar() {
 
           {/* Image Style Button */}
           <button
-            onClick={() => setUseCollection(!useCollection)}
-            className={`flex-1 p-3 rounded-[10px] border flex items-center justify-center transition-colors ${
-              useCollection
-                ? 'bg-[#3B1FD1] border-[#6345FA] text-white'
-                : 'bg-[#1F1F1F] border-[#2B2B2B] text-[#888] hover:text-white'
-            }`}
-            title={`Use Collection (${collection.length})`}
+            onClick={() => setImageModalOpen(true)}
+            className="flex-1 p-3 rounded-[10px] border flex items-center justify-center transition-colors bg-[#1F1F1F] border-[#2B2B2B] text-[#888] hover:text-white"
+            title="Image Settings"
           >
             <ImageIcon size={18} />
           </button>
@@ -199,18 +197,18 @@ export default function LeftSidebar() {
         <button
           onClick={handleGenerate}
           disabled={isGenerating || !prompt.trim()}
-          className="w-full mt-[14px] px-[18px] py-4 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium flex items-center justify-center gap-2 hover:bg-[#4B2DE1] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[14px] tracking-[1.68px]"
+          className="w-full mt-[14px] py-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium flex items-center justify-center gap-2 hover:bg-[#4B2DE1] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[12px] tracking-[1.44px]"
           style={{ fontFamily: 'Space Grotesk, sans-serif' }}
         >
           {isGenerating ? (
             <>
-              <Loader2 size={18} className="animate-spin" />
+              <Loader2 size={14} className="animate-spin" />
               GENERATING...
             </>
           ) : (
             <>
               GENERATE
-              <Sparkles size={18} />
+              <Sparkles size={14} />
             </>
           )}
         </button>
@@ -243,6 +241,17 @@ export default function LeftSidebar() {
       <TextStyleModal
         isOpen={textStyleModalOpen}
         onClose={() => setTextStyleModalOpen(false)}
+      />
+
+      {/* Image Modal */}
+      <ImageModal
+        isOpen={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+        onSave={(imageUrl) => {
+          // Set collection URLs for generation
+          setCollection([{ id: Date.now().toString(), url: imageUrl }, ...collection]);
+          setUseCollection(true);
+        }}
       />
     </div>
   );

@@ -1,9 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
-import puppeteer from 'puppeteer-core';
+import puppeteer, { Browser } from 'puppeteer-core';
 import chromium from '@sparticuz/chromium-min';
 
-// Remote Chromium URL for serverless (keeps function size small)
-const CHROMIUM_URL = 'https://github.com/nichenqin/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar';
+const isLocal = process.env.NODE_ENV === 'development';
+
+// Remote Chromium for production (Vercel)
+const CHROMIUM_URL = 'https://github.com/Sparticuz/chromium/releases/download/v143.0.4/chromium-v143.0.4-pack.x64.tar';
+
+async function getBrowser(): Promise<Browser> {
+  if (isLocal) {
+    // Use local Chrome on Mac
+    return puppeteer.launch({
+      headless: true,
+      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+  } else {
+    // Use remote Chromium for serverless
+    const executablePath = await chromium.executablePath(CHROMIUM_URL);
+    return puppeteer.launch({
+      args: chromium.args,
+      executablePath,
+      headless: true,
+    });
+  }
+}
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -17,26 +38,22 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid Pinterest URL' }, { status: 400 });
   }
 
-  let browser;
+  let browser: Browser | null = null;
   try {
-    const executablePath = await chromium.executablePath(CHROMIUM_URL);
-
-    browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath,
-      headless: true,
-    });
-
+    browser = await getBrowser();
     const page = await browser.newPage();
 
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     await page.setViewport({ width: 1920, height: 1080 });
 
     // Navigate to Pinterest
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 25000 });
+    console.log('Navigating to:', url);
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
 
     // Wait for images to load
-    await page.waitForSelector('img[src*="pinimg.com"]', { timeout: 10000 }).catch(() => {});
+    await page.waitForSelector('img[src*="pinimg.com"]', { timeout: 10000 }).catch(() => {
+      console.log('No pinimg images found with selector, continuing...');
+    });
 
     // Scroll to load more images
     for (let i = 0; i < 3; i++) {
@@ -77,6 +94,7 @@ export async function GET(request: NextRequest) {
     });
 
     await browser.close();
+    browser = null;
 
     // Format results
     const results = imageUrls.slice(0, 30).map((imgUrl, index) => {

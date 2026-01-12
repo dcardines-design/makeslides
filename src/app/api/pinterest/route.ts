@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import chromium from '@sparticuz/chromium';
 import { chromium as playwrightChromium } from 'playwright-core';
 
-// Optimize chromium for serverless
-chromium.setHeadlessMode = 'shell';
-chromium.setGraphicsMode = false;
-
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const url = searchParams.get('url');

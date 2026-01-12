@@ -8,5 +8,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export interface CollectionImage {
   id: string;
   url: string;
+  group_name?: string;
   created_at?: string;
 }

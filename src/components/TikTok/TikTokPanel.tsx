@@ -183,7 +183,7 @@ export default function TikTokPanel({ onUpload }: TikTokPanelProps) {
       {!isConnected ? (
         <button
           onClick={() => window.open('/design', '_blank')}
-          className="w-full px-[14px] py-3 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-white font-medium text-[12px] tracking-[1px] transition-colors hover:bg-[#2a2a2a] hover:border-[#3B1CD1] flex items-center justify-center gap-2"
+          className="w-full px-[14px] py-3 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-white font-medium text-[12px] tracking-[1px] transition-all duration-150 hover:bg-[#2a2a2a] hover:border-[#3B1DD1] flex items-center justify-center gap-2"
           style={{ fontFamily: 'Space Grotesk, sans-serif' }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -256,7 +256,7 @@ export default function TikTokPanel({ onUpload }: TikTokPanelProps) {
             <button
               onClick={handleUpload}
               disabled={uploading || !onUpload}
-              className="flex-1 px-3 py-2.5 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[11px] tracking-[1px] transition-colors hover:bg-[#4B2DE1] disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 px-3 py-2.5 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[11px] tracking-[1px] transition-all duration-150 hover:bg-[#4B2DE1] disabled:opacity-50 flex items-center justify-center gap-2"
               style={{ fontFamily: 'Space Grotesk, sans-serif' }}
             >
               {uploading ? (
@@ -268,10 +268,10 @@ export default function TikTokPanel({ onUpload }: TikTokPanelProps) {
             </button>
             <button
               onClick={toggleAnalytics}
-              className={`flex-1 px-3 py-2.5 rounded-[10px] border font-medium text-[11px] tracking-[1px] transition-colors flex items-center justify-center gap-2 ${
+              className={`flex-1 px-3 py-2.5 rounded-[10px] border font-medium text-[11px] tracking-[1px] transition-all duration-150 flex items-center justify-center gap-2 ${
                 showAnalytics
-                  ? 'bg-[#3B1FD1] border-[#6345FA] text-white'
-                  : 'bg-[#1F1F1F] border-[#2B2B2B] text-white hover:border-[#3B1CD1]'
+                  ? 'bg-[#2A1E66] border-[#3B1DD1] text-white'
+                  : 'bg-[#1F1F1F] border-[#2B2B2B] text-white hover:border-[#3B1DD1]'
               }`}
               style={{ fontFamily: 'Space Grotesk, sans-serif' }}
             >

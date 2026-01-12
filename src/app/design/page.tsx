@@ -21,52 +21,112 @@ export default function DesignComponents() {
           >
             Buttons
           </h2>
-          <div className="p-6 bg-[#151515] rounded-[20px] border border-[#2B2B2B] space-y-4">
-            {/* Primary Button */}
+          <div className="p-6 bg-[#151515] rounded-[20px] border border-[#2B2B2B] space-y-6">
+            {/* Button Sizes - Primary */}
             <div>
-              <p className="text-xs text-[#666] mb-2">Primary Button</p>
-              <button
-                className="px-[14px] py-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[12px] tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors flex items-center gap-2"
-                style={{ fontFamily: 'Space Grotesk, sans-serif' }}
-              >
-                GENERATE
-                <Sparkles size={14} />
-              </button>
+              <p className="text-xs text-[#666] mb-3">Primary Button Sizes</p>
+              <div className="flex items-center gap-3">
+                <div className="text-center">
+                  <button
+                    className="px-3 py-2 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[11px] tracking-[1px] hover:bg-[#4B2DE1] transition-colors flex items-center gap-2"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    <Plus size={12} />
+                    SMALL
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">px-3 py-2 text-[11px]</p>
+                </div>
+                <div className="text-center">
+                  <button
+                    className="px-[14px] py-[8px] rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[12px] tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors flex items-center gap-2"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    <Search size={14} />
+                    MED
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">px-[14px] py-[8px] text-[12px]</p>
+                </div>
+                <div className="text-center">
+                  <button
+                    className="px-[14px] py-2.5 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[12px] tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors flex items-center gap-2"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    <Sparkles size={14} />
+                    LARGE
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">px-[14px] py-2.5 text-[12px]</p>
+                </div>
+              </div>
             </div>
 
-            {/* Secondary Button */}
+            {/* Button Sizes - Secondary */}
             <div>
-              <p className="text-xs text-[#666] mb-2">Secondary Button</p>
-              <button
-                className="px-[14px] py-[8px] rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-white font-medium text-[12px] tracking-[1.44px] hover:bg-[#2B2B2B] transition-colors"
-                style={{ fontFamily: 'Space Grotesk, sans-serif' }}
-              >
-                SEARCH
-              </button>
+              <p className="text-xs text-[#666] mb-3">Secondary Button Sizes</p>
+              <div className="flex items-center gap-3">
+                <div className="text-center">
+                  <button
+                    className="px-3 py-2 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-white font-medium text-[11px] tracking-[1px] hover:bg-[#2B2B2B] transition-colors flex items-center gap-2"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    <Plus size={12} />
+                    SMALL
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">px-3 py-2 text-[11px]</p>
+                </div>
+                <div className="text-center">
+                  <button
+                    className="px-[14px] py-[8px] rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-white font-medium text-[12px] tracking-[1.44px] hover:bg-[#2B2B2B] transition-colors flex items-center gap-2"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    <Search size={14} />
+                    MED
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">px-[14px] py-[8px] text-[12px]</p>
+                </div>
+                <div className="text-center">
+                  <button
+                    className="px-[14px] py-2.5 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-white font-medium text-[12px] tracking-[1.44px] hover:bg-[#2B2B2B] transition-colors flex items-center gap-2"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    <Sparkles size={14} />
+                    LARGE
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">px-[14px] py-2.5 text-[12px]</p>
+                </div>
+              </div>
             </div>
 
             {/* Icon Buttons */}
             <div>
-              <p className="text-xs text-[#666] mb-2">Icon Buttons</p>
-              <div className="flex gap-2">
-                <button className="p-3 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-[#888] hover:text-white transition-colors">
-                  <Type size={18} />
-                </button>
-                <button className="p-3 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-[#888] hover:text-white transition-colors">
-                  <ImageIcon size={18} />
-                </button>
-                <button className="p-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white transition-colors">
-                  <ImageIcon size={18} />
-                </button>
+              <p className="text-xs text-[#666] mb-3">Icon Buttons</p>
+              <div className="flex items-center gap-3">
+                <div className="text-center">
+                  <button className="p-2 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-[#888] hover:text-white transition-colors">
+                    <Type size={14} />
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">p-2 (small)</p>
+                </div>
+                <div className="text-center">
+                  <button className="p-3 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-[#888] hover:text-white transition-colors">
+                    <ImageIcon size={18} />
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">p-3 (medium)</p>
+                </div>
+                <div className="text-center">
+                  <button className="p-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white transition-colors">
+                    <ImageIcon size={18} />
+                  </button>
+                  <p className="text-[10px] text-[#555] mt-2">Active</p>
+                </div>
               </div>
             </div>
 
             {/* Loading Button */}
             <div>
-              <p className="text-xs text-[#666] mb-2">Loading State</p>
+              <p className="text-xs text-[#666] mb-3">Loading State</p>
               <button
                 disabled
-                className="px-[14px] py-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[12px] tracking-[1.44px] opacity-50 flex items-center gap-2"
+                className="px-[14px] py-2.5 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[12px] tracking-[1.44px] opacity-50 flex items-center gap-2"
                 style={{ fontFamily: 'Space Grotesk, sans-serif' }}
               >
                 <Loader2 size={14} className="animate-spin" />
@@ -84,21 +144,68 @@ export default function DesignComponents() {
           >
             Tabs / Chips
           </h2>
-          <div className="p-6 bg-[#151515] rounded-[20px] border border-[#2B2B2B]">
-            <div className="flex gap-2">
-              {['unsplash', 'pinterest', 'collection'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setSelectedTab(tab)}
-                  className={`px-[14px] py-[8px] rounded-[10px] text-sm font-medium transition-colors border ${
-                    selectedTab === tab
-                      ? 'bg-[#3B1CD1] border-[#3B1CD1] text-white'
-                      : 'bg-[#1F1F1F] border-[#2B2B2B] text-[#888] hover:text-white'
-                  }`}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
+          <div className="p-6 bg-[#151515] rounded-[20px] border border-[#2B2B2B] space-y-6">
+            {/* Small Tabs */}
+            <div>
+              <p className="text-xs text-[#666] mb-3">Small</p>
+              <div className="flex gap-2">
+                {['unsplash', 'pinterest', 'collection'].map((tab, i) => (
+                  <button
+                    key={tab}
+                    className={`px-3 py-2 rounded-[10px] font-medium text-[11px] tracking-[1px] border transition-all duration-150 ${
+                      i === 0
+                        ? 'bg-[#2A1E66] border-[#3B1DD1] text-white'
+                        : 'bg-[#1F1F1F] border-[#2B2B2B] text-[#888] hover:text-white'
+                    }`}
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    {tab.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-[#555] mt-2">px-3 py-2 text-[11px]</p>
+            </div>
+
+            {/* Medium Tabs */}
+            <div>
+              <p className="text-xs text-[#666] mb-3">Medium</p>
+              <div className="flex gap-2">
+                {['unsplash', 'pinterest', 'collection'].map((tab, i) => (
+                  <button
+                    key={tab}
+                    className={`px-[14px] py-[8px] rounded-[10px] font-medium text-[12px] tracking-[1.44px] border transition-all duration-150 ${
+                      i === 0
+                        ? 'bg-[#2A1E66] border-[#3B1DD1] text-white'
+                        : 'bg-[#1F1F1F] border-[#2B2B2B] text-[#888] hover:text-white'
+                    }`}
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    {tab.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-[#555] mt-2">px-[14px] py-[8px] text-[12px]</p>
+            </div>
+
+            {/* Large Tabs */}
+            <div>
+              <p className="text-xs text-[#666] mb-3">Large</p>
+              <div className="flex gap-2">
+                {['unsplash', 'pinterest', 'collection'].map((tab, i) => (
+                  <button
+                    key={tab}
+                    className={`px-[14px] py-2.5 rounded-[10px] font-medium text-[12px] tracking-[1.44px] border transition-all duration-150 ${
+                      i === 0
+                        ? 'bg-[#2A1E66] border-[#3B1DD1] text-white'
+                        : 'bg-[#1F1F1F] border-[#2B2B2B] text-[#888] hover:text-white'
+                    }`}
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  >
+                    {tab.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-[#555] mt-2">px-[14px] py-2.5 text-[12px]</p>
             </div>
           </div>
         </section>
@@ -112,45 +219,53 @@ export default function DesignComponents() {
             Inputs
           </h2>
           <div className="p-6 bg-[#151515] rounded-[20px] border border-[#2B2B2B] space-y-6">
-            {/* Standalone Input */}
+            {/* Standalone Input Sizes */}
             <div>
-              <label
-                className="text-[10px] text-[#8A8A8A] uppercase font-medium mb-2 block"
-                style={{ fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '1.2px' }}
-              >
-                Standalone Input
-              </label>
-              <input
-                type="text"
-                placeholder="Enter text..."
-                className="w-full px-5 py-3 bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] text-sm text-white placeholder-[#7D7D7D] focus:outline-none focus:border-[#3B1CD1]"
-              />
+              <p className="text-xs text-[#666] mb-3">Standalone Input Sizes</p>
+              <div className="space-y-3">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Small input..."
+                    className="w-full px-3 py-2 bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] text-[12px] text-white placeholder-[#7D7D7D] focus:outline-none hover:border-[#3B1DD1]/50 focus:border-[#3B1CD1] transition-all duration-150"
+                  />
+                  <p className="text-[10px] text-[#555] mt-1">px-3 py-2 text-[12px]</p>
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Medium input..."
+                    className="w-full px-[14px] py-[8px] bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] text-[14px] text-white placeholder-[#7D7D7D] focus:outline-none hover:border-[#3B1DD1]/50 focus:border-[#3B1CD1] transition-all duration-150"
+                  />
+                  <p className="text-[10px] text-[#555] mt-1">px-[14px] py-[8px] text-[14px]</p>
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Large input..."
+                    className="w-full px-[14px] py-2.5 bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] text-[14px] text-white placeholder-[#7D7D7D] focus:outline-none hover:border-[#3B1DD1]/50 focus:border-[#3B1CD1] transition-all duration-150"
+                  />
+                  <p className="text-[10px] text-[#555] mt-1">px-[14px] py-2.5 text-[14px]</p>
+                </div>
+              </div>
             </div>
 
-            {/* Grouped Input */}
+            {/* Input with Button (side by side) */}
             <div>
-              <label
-                className="text-[10px] text-[#8A8A8A] uppercase font-medium mb-2 block"
-                style={{ fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '1.2px' }}
-              >
-                Grouped Input with Button
-              </label>
-              <div className="flex items-stretch bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] overflow-hidden focus-within:border-[#3B1CD1]">
+              <p className="text-xs text-[#666] mb-3">Input with Button</p>
+              <div className="flex gap-2">
                 <input
                   type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="fitness, gym, faceless, aesthetic"
-                  className="flex-1 px-[18px] py-[10px] bg-transparent text-sm text-white placeholder-[#7D7D7D] focus:outline-none"
+                  placeholder="Search tags..."
+                  className="flex-1 px-[14px] py-[8px] bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] text-[14px] text-white placeholder-[#7D7D7D] focus:outline-none hover:border-[#3B1DD1]/50 focus:border-[#3B1CD1] transition-all duration-150"
                 />
                 <button
-                  className="px-[14px] py-[10px] bg-[#3B1FD1] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-colors"
+                  className="px-[14px] py-[8px] rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white text-[12px] font-medium tracking-[1.44px] hover:bg-[#4B2DE1] transition-all duration-150"
                   style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                 >
-                  Search
+                  SEARCH
                 </button>
               </div>
-              <p className="text-[10px] text-[#555] mt-2">Helper text goes here</p>
             </div>
 
             {/* Dashed Input */}
@@ -311,10 +426,10 @@ export default function DesignComponents() {
                   <p className="text-[10px] text-[#666]">font-family: 'Space Grotesk', sans-serif</p>
                 </div>
                 <div>
-                  <p className="text-lg text-white" style={{ fontFamily: 'Inter, sans-serif' }}>
-                    Inter - Body Text
+                  <p className="text-lg text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+                    Space Grotesk - Body Text
                   </p>
-                  <p className="text-[10px] text-[#666]">font-family: 'Inter', sans-serif</p>
+                  <p className="text-[10px] text-[#666]">font-family: 'Space Grotesk', sans-serif</p>
                 </div>
               </div>
             </div>
@@ -426,10 +541,10 @@ export default function DesignComponents() {
           <div className="p-6 bg-[#151515] rounded-[20px] border border-[#2B2B2B]">
             <div className="flex items-end gap-8">
               {[
-                { size: 12, name: 'size={12}', desc: 'Small' },
+                { size: 12, name: 'size={12}', desc: 'SMALL' },
                 { size: 14, name: 'size={14}', desc: 'Default' },
-                { size: 16, name: 'size={16}', desc: 'Medium' },
-                { size: 18, name: 'size={18}', desc: 'Large' },
+                { size: 16, name: 'size={16}', desc: 'MEDium' },
+                { size: 18, name: 'size={18}', desc: 'LARGE' },
                 { size: 24, name: 'size={24}', desc: 'XL' },
               ].map((i) => (
                 <div key={i.size} className="text-center">

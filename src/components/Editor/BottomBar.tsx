@@ -79,10 +79,10 @@ export default function BottomBar() {
             <div key={slide.id} className="relative group flex-shrink-0">
               <button
                 onClick={() => setCurrentSlide(index)}
-                className={`relative w-[60px] h-[90px] rounded-[10px] overflow-hidden transition-all ${
+                className={`relative w-[60px] h-[90px] rounded-[10px] overflow-hidden transition-all border-2 ${
                   index === currentSlideIndex
-                    ? 'ring-2 ring-[#3B1FD1]'
-                    : 'hover:ring-1 hover:ring-[#333]'
+                    ? 'border-[#3B1FD1]'
+                    : 'border-[#2B2B2B] hover:border-[#444]'
                 }`}
               >
                 {slide.backgroundImage ? (
@@ -135,14 +135,14 @@ export default function BottomBar() {
         <div className="flex flex-col gap-[16px] p-[20px] bg-[#141414] border border-[#2B2B2B] rounded-[10px] flex-shrink-0">
           <button
             onClick={handleExportAll}
-            className="px-10 py-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[14px] tracking-[1.68px] transition-colors hover:bg-[#4B2DE1]"
+            className="px-10 py-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium text-[14px] tracking-[1.68px] transition-all duration-150 hover:bg-[#4B2DE1]"
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
             EXPORT ALL
           </button>
           <button
             onClick={addSlide}
-            className="px-10 py-3 rounded-[10px] bg-[#141414] border border-[#2B2B2B] text-white font-medium text-[14px] tracking-[1.68px] transition-colors hover:bg-[#2a2a2a] flex items-center justify-center gap-2"
+            className="px-10 py-3 rounded-[10px] bg-[#141414] border border-[#2B2B2B] text-white font-medium text-[14px] tracking-[1.68px] transition-all duration-150 hover:bg-[#2a2a2a] flex items-center justify-center gap-2"
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
             <Plus size={16} />

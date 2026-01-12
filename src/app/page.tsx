@@ -49,7 +49,8 @@ export default function Home() {
           <div
             ref={scrollContainerRef}
             className="flex-1 flex items-start gap-[24px] overflow-x-auto pl-[50px] pb-[40px] mt-[40px] scrollbar-hide"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'pan-x pan-y' }}
+            onDoubleClick={(e) => e.preventDefault()}
           >
             {slides.map((slide, index) => (
               <div

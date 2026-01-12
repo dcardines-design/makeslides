@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useEditorStore, GeneratedSlideContent } from '@/stores/editorStore';
-import { Sparkles, Loader2, ImageIcon, Clock, Trash2, Type, ChevronUp } from 'lucide-react';
+import { Sparkles, Loader2, ImageIcon, Clock, Trash2, Copy, Type, ChevronUp, X } from 'lucide-react';
 import TextStyleModal from '@/components/Editor/TextStyleModal';
 import ImageModal from '@/components/Editor/ImageModal';
 import TikTokPanel from '@/components/TikTok/TikTokPanel';
@@ -25,12 +25,13 @@ export default function LeftSidebar() {
   const [prompt, setPrompt] = useState('');
   const [useCollection, setUseCollection] = useState(false);
   const [collection, setCollection] = useState<CollectionImage[]>([]);
+  const [selectedCollectionName, setSelectedCollectionName] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [textStyleModalOpen, setTextStyleModalOpen] = useState(false);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [tiktokExpanded, setTiktokExpanded] = useState(true);
-  const { generateSlidesFromAI, loadFromHistory, isGenerating, slides } = useEditorStore();
+  const { generateSlidesFromAI, loadFromHistory, isGenerating, slides, setCollectionUrls } = useEditorStore();
 
   // Fetch collection and history on mount
   useEffect(() => {
@@ -98,6 +99,11 @@ export default function LeftSidebar() {
     }
   };
 
+  const handleCopyPrompt = (promptText: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(promptText);
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -142,7 +148,8 @@ export default function LeftSidebar() {
             <div
               key={entry.id}
               onClick={() => handleLoadHistory(entry)}
-              className="group relative text-sm px-3.5 py-3 bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] cursor-pointer hover:bg-[#2a2a2a] hover:border-[#3B1CD1] transition-colors"
+              className="group relative text-sm px-3.5 py-3 bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] cursor-pointer hover:bg-[#2a2a2a] hover:border-[#3B1DD1] transition-all duration-150"
+              style={{ fontFamily: 'Space Grotesk, sans-serif' }}
             >
               <p className="text-white text-sm line-clamp-2 pr-6">{entry.prompt}</p>
               <div className="flex items-center gap-2 mt-1.5 text-[#666] text-xs">
@@ -150,12 +157,22 @@ export default function LeftSidebar() {
                 <span>•</span>
                 <span>{formatDate(entry.created_at)}</span>
               </div>
-              <button
-                onClick={(e) => handleDeleteHistory(entry.id, e)}
-                className="absolute top-2 right-2 p-1 text-[#555] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <Trash2 size={14} />
-              </button>
+              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={(e) => handleCopyPrompt(entry.prompt, e)}
+                  className="p-1 text-[#555] hover:text-white transition-colors"
+                  title="Copy prompt"
+                >
+                  <Copy size={14} />
+                </button>
+                <button
+                  onClick={(e) => handleDeleteHistory(entry.id, e)}
+                  className="p-1 text-[#555] hover:text-red-500 transition-colors"
+                  title="Delete"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
             </div>
           ))
         )}
@@ -163,21 +180,22 @@ export default function LeftSidebar() {
       </div>
 
       {/* Prompt Input */}
-      <div>
+      <div className="flex flex-col gap-[14px]">
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="gimme 7 slides, each slide gives budgeting tips"
-          className="w-full h-24 px-5 py-4 bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] text-white text-sm placeholder-[#7D7D7D] resize-none focus:outline-none focus:border-[#3B1CD1] transition-colors"
+          className="w-full h-24 px-[14px] py-[8px] bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] text-white text-[14px] placeholder-[#7D7D7D] resize-none focus:outline-none hover:border-[#3B1DD1]/50 focus:border-[#3B1CD1] transition-all duration-150"
+          style={{ fontFamily: 'Space Grotesk, sans-serif' }}
         />
 
         {/* Icon buttons row */}
-        <div className="flex gap-[10px] mt-[10px]">
+        <div className="flex gap-[10px]">
           {/* Text Style Button */}
           <button
             onClick={() => setTextStyleModalOpen(true)}
-            className="flex-1 p-3 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-[#888] hover:text-white transition-colors flex items-center justify-center"
+            className="flex-1 p-3 rounded-[10px] bg-[#1F1F1F] border border-[#2B2B2B] text-[#888] hover:text-white transition-all duration-150 flex items-center justify-center"
             title="Text Style Settings"
           >
             <Type size={18} />
@@ -186,18 +204,44 @@ export default function LeftSidebar() {
           {/* Image Style Button */}
           <button
             onClick={() => setImageModalOpen(true)}
-            className="flex-1 p-3 rounded-[10px] border flex items-center justify-center transition-colors bg-[#1F1F1F] border-[#2B2B2B] text-[#888] hover:text-white"
+            className={`flex-1 p-3 rounded-[10px] border flex items-center justify-center transition-all duration-150 ${
+              useCollection
+                ? 'bg-[#2A1E66] border-[#3B1DD1] text-white'
+                : 'bg-[#1F1F1F] border-[#2B2B2B] text-[#888] hover:text-white'
+            }`}
             title="Image Settings"
           >
             <ImageIcon size={18} />
           </button>
         </div>
 
+        {/* Selected Collection Indicator */}
+        {useCollection && (
+          <div className="px-3 py-2 bg-[#1F1F1F] border border-[#2B2B2B] rounded-[10px] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ImageIcon size={14} className="text-[#3B1DD1]" />
+              <span className="text-[11px] text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+                {selectedCollectionName || `${collection.length} image${collection.length !== 1 ? 's' : ''}`}
+              </span>
+            </div>
+            <button
+              onClick={() => {
+                setUseCollection(false);
+                setSelectedCollectionName(null);
+                setCollection([]);
+              }}
+              className="text-[#666] hover:text-white transition-colors"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
+
         {/* Generate Button */}
         <button
           onClick={handleGenerate}
           disabled={isGenerating || !prompt.trim()}
-          className="w-full mt-[14px] py-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium flex items-center justify-center gap-2 hover:bg-[#4B2DE1] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[12px] tracking-[1.44px]"
+          className="w-full py-3 rounded-[10px] bg-[#3B1FD1] border border-[#6345FA] text-white font-medium flex items-center justify-center gap-2 hover:bg-[#4B2DE1] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed text-[12px] tracking-[1.44px]"
           style={{ fontFamily: 'Space Grotesk, sans-serif' }}
         >
           {isGenerating ? (
@@ -248,9 +292,18 @@ export default function LeftSidebar() {
         isOpen={imageModalOpen}
         onClose={() => setImageModalOpen(false)}
         onSave={(imageUrl) => {
-          // Set collection URLs for generation
-          setCollection([{ id: Date.now().toString(), url: imageUrl }, ...collection]);
+          // Set single image for generation
+          setCollection([{ id: Date.now().toString(), url: imageUrl }]);
+          setSelectedCollectionName(null);
           setUseCollection(true);
+          setCollectionUrls([imageUrl]);
+        }}
+        onSaveCollection={(images, groupName) => {
+          // Set collection images for generation
+          setCollection(images.map((url, i) => ({ id: `${Date.now()}-${i}`, url })));
+          setSelectedCollectionName(groupName);
+          setUseCollection(true);
+          setCollectionUrls(images);
         }}
       />
     </div>

@@ -18,10 +18,32 @@ export async function GET() {
   }
 }
 
-// POST - Add image to collection
+// POST - Add image(s) to collection
 export async function POST(request: NextRequest) {
   try {
-    const { url } = await request.json();
+    const body = await request.json();
+
+    // Support both single URL and batch URLs with group name
+    if (body.urls && Array.isArray(body.urls)) {
+      // Batch insert with group name
+      const { urls, groupName } = body;
+      const insertData = urls.map((url: string) => ({
+        url,
+        group_name: groupName || null,
+      }));
+
+      const { data, error } = await supabase
+        .from('collection')
+        .upsert(insertData, { onConflict: 'url', ignoreDuplicates: true })
+        .select();
+
+      if (error) throw error;
+
+      return NextResponse.json({ images: data || [], groupName });
+    }
+
+    // Single URL (backwards compatible)
+    const { url, groupName } = body;
 
     if (!url) {
       return NextResponse.json({ error: 'URL is required' }, { status: 400 });
@@ -40,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabase
       .from('collection')
-      .insert({ url })
+      .insert({ url, group_name: groupName || null })
       .select()
       .single();
 

@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { chromium } from 'playwright';
+import chromium from '@sparticuz/chromium';
+import { chromium as playwrightChromium } from 'playwright-core';
+
+// Optimize chromium for serverless
+chromium.setHeadlessMode = 'shell';
+chromium.setGraphicsMode = false;
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -15,8 +20,12 @@ export async function GET(request: NextRequest) {
 
   let browser;
   try {
-    // Launch browser
-    browser = await chromium.launch({
+    // Launch browser with serverless-compatible settings
+    const executablePath = await chromium.executablePath();
+
+    browser = await playwrightChromium.launch({
+      args: chromium.args,
+      executablePath,
       headless: true,
     });
 
@@ -27,18 +36,18 @@ export async function GET(request: NextRequest) {
 
     const page = await context.newPage();
 
-    // Navigate to Pinterest
-    await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+    // Navigate to Pinterest - use domcontentloaded for faster loading
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
     // Wait for images to load
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(2000);
 
-    // Scroll multiple times to load more images
-    for (let i = 0; i < 3; i++) {
+    // Scroll to load more images (reduced iterations for serverless)
+    for (let i = 0; i < 2; i++) {
       await page.evaluate(() => {
         window.scrollBy(0, window.innerHeight);
       });
-      await page.waitForTimeout(1500);
+      await page.waitForTimeout(1000);
     }
 
     // Extract image URLs

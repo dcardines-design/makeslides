@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface TextElement {
   id: string;
@@ -13,6 +14,12 @@ export interface TextElement {
   textAlign: 'left' | 'center' | 'right';
   width: number;
   shadowEnabled: boolean;
+  outlineStyle?: 'none' | 'outline' | 'box';
+  outlineSize?: number;
+  outlineColor?: string;
+  paddingX?: number;
+  paddingY?: number;
+  opacity?: number;
 }
 
 export interface Slide {
@@ -32,7 +39,12 @@ export interface GeneratedSlideContent {
 export interface TextStyleSettings {
   fontFamily: string;
   fontSize: number;
-  outlineStyle: 'none' | 'outline' | 'highlight' | 'shadow';
+  outlineStyle: 'none' | 'outline' | 'box';
+  outlineSize: number;
+  outlineColor: string;
+  paddingX: number;
+  paddingY: number;
+  opacity: number;
 }
 
 interface EditorState {
@@ -46,6 +58,7 @@ interface EditorState {
   selectedFont: string;
   headerStyle: TextStyleSettings;
   bodyStyle: TextStyleSettings;
+  collectionUrls: string[];
 
   // Actions
   addSlide: () => void;
@@ -67,6 +80,8 @@ interface EditorState {
   setSelectedFont: (font: string) => void;
   setHeaderStyle: (style: Partial<TextStyleSettings>) => void;
   setBodyStyle: (style: Partial<TextStyleSettings>) => void;
+  setCollectionUrls: (urls: string[]) => void;
+  refreshSlideBackground: (index: number) => void;
 
   getCurrentSlide: () => Slide;
 
@@ -86,25 +101,38 @@ const createDefaultSlide = (): Slide => ({
   elements: [],
 });
 
-export const useEditorStore = create<EditorState>((set, get) => ({
-  slides: [createDefaultSlide()],
-  currentSlideIndex: 0,
-  selectedElementId: null,
-  zoom: 0.35,
-  lastPrompt: null,
-  lastStyle: 'casual',
-  isGenerating: false,
-  selectedFont: 'Inter',
-  headerStyle: {
-    fontFamily: 'Inter',
-    fontSize: 48,
-    outlineStyle: 'none',
-  },
-  bodyStyle: {
-    fontFamily: 'Inter',
-    fontSize: 36,
-    outlineStyle: 'none',
-  },
+export const useEditorStore = create<EditorState>()(
+  persist(
+    (set, get) => ({
+      slides: [createDefaultSlide()],
+      currentSlideIndex: 0,
+      selectedElementId: null,
+      zoom: 0.35,
+      lastPrompt: null,
+      lastStyle: 'casual',
+      isGenerating: false,
+      selectedFont: 'Space Grotesk',
+      headerStyle: {
+        fontFamily: 'Space Grotesk',
+        fontSize: 48,
+        outlineStyle: 'none',
+        outlineSize: 4,
+        outlineColor: '#000000',
+        paddingX: 32,
+        paddingY: 24,
+        opacity: 80,
+      },
+      bodyStyle: {
+        fontFamily: 'Space Grotesk',
+        fontSize: 36,
+        outlineStyle: 'none',
+        outlineSize: 4,
+        outlineColor: '#000000',
+        paddingX: 32,
+        paddingY: 24,
+        opacity: 80,
+      },
+      collectionUrls: [],
 
   addSlide: () => set((state) => ({
     slides: [...state.slides, createDefaultSlide()],
@@ -228,6 +256,26 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setBodyStyle: (style) => set((state) => ({
     bodyStyle: { ...state.bodyStyle, ...style },
   })),
+  setCollectionUrls: (urls) => set({ collectionUrls: urls }),
+  refreshSlideBackground: (index) => set((state) => {
+    const { collectionUrls, slides } = state;
+    if (collectionUrls.length === 0) return state;
+
+    // Pick a random URL from the collection
+    const randomUrl = collectionUrls[Math.floor(Math.random() * collectionUrls.length)];
+    // Proxy Pinterest images
+    const isPinterest = randomUrl.includes('pinimg.com');
+    const imageUrl = isPinterest
+      ? `/api/proxy-image?url=${encodeURIComponent(randomUrl)}`
+      : randomUrl;
+
+    const newSlides = [...slides];
+    newSlides[index] = {
+      ...newSlides[index],
+      backgroundImage: imageUrl,
+    };
+    return { slides: newSlides };
+  }),
 
   getCurrentSlide: () => {
     const state = get();
@@ -253,10 +301,17 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
       const data = await response.json();
       if (data.slides && data.slides.length > 0) {
-        // If using collection, assign images to slides
+        // If using collection, assign images to slides (randomized)
         if (collectionUrls?.length) {
+          // Shuffle the collection URLs using Fisher-Yates algorithm
+          const shuffled = [...collectionUrls];
+          for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+          }
+
           data.slides.forEach((slide: GeneratedSlideContent, index: number) => {
-            const url = collectionUrls[index % collectionUrls.length];
+            const url = shuffled[index % shuffled.length];
             // Proxy Pinterest images to avoid CORS issues
             const isPinterest = url.includes('pinimg.com');
             slide.backgroundImage = isPinterest
@@ -312,6 +367,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
             textAlign: 'center' as const,
             width: 900,
             shadowEnabled: true,
+            outlineStyle: headerStyle.outlineStyle,
+            outlineSize: headerStyle.outlineSize,
+            outlineColor: headerStyle.outlineColor,
+            paddingX: headerStyle.paddingX,
+            paddingY: headerStyle.paddingY,
+            opacity: headerStyle.opacity,
           },
           {
             id: crypto.randomUUID(),
@@ -325,6 +386,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
             textAlign: 'center' as const,
             width: 900,
             shadowEnabled: true,
+            outlineStyle: bodyStyle.outlineStyle,
+            outlineSize: bodyStyle.outlineSize,
+            outlineColor: bodyStyle.outlineColor,
+            paddingX: bodyStyle.paddingX,
+            paddingY: bodyStyle.paddingY,
+            opacity: bodyStyle.opacity,
           },
         ],
       };
@@ -420,6 +487,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
             textAlign: 'center' as const,
             width: 900,
             shadowEnabled: true,
+            outlineStyle: headerStyle.outlineStyle,
+            outlineSize: headerStyle.outlineSize,
+            outlineColor: headerStyle.outlineColor,
+            paddingX: headerStyle.paddingX,
+            paddingY: headerStyle.paddingY,
+            opacity: headerStyle.opacity,
           },
           {
             id: crypto.randomUUID(),
@@ -433,6 +506,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
             textAlign: 'center' as const,
             width: 900,
             shadowEnabled: true,
+            outlineStyle: bodyStyle.outlineStyle,
+            outlineSize: bodyStyle.outlineSize,
+            outlineColor: bodyStyle.outlineColor,
+            paddingX: bodyStyle.paddingX,
+            paddingY: bodyStyle.paddingY,
+            opacity: bodyStyle.opacity,
           },
         ],
       };
@@ -452,4 +531,18 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     currentSlideIndex: 0,
     selectedElementId: null,
   }),
-}));
+    }),
+    {
+      name: 'makeslides-settings',
+      partialize: (state) => ({
+        slides: state.slides,
+        currentSlideIndex: state.currentSlideIndex,
+        lastPrompt: state.lastPrompt,
+        lastStyle: state.lastStyle,
+        headerStyle: state.headerStyle,
+        bodyStyle: state.bodyStyle,
+        selectedFont: state.selectedFont,
+      }),
+    }
+  )
+);

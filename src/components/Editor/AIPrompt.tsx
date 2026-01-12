@@ -22,7 +22,8 @@ export default function AIPrompt() {
           value={aiPrompt}
           onChange={(e) => setAiPrompt(e.target.value)}
           placeholder="gimme 7 slides, each slide gives budgeting tips"
-          className="flex-1 h-14 px-6 bg-[#1a1a1a] border border-[#333] rounded-full text-white placeholder-[#666] focus:outline-none focus:border-[#3B1DD1] text-base"
+          className="flex-1 h-14 px-6 bg-[#0a0a0a] border border-[#2B2B2B] rounded-full text-white placeholder-[#7D7D7D] focus:outline-none hover:border-[#3B1DD1]/50 focus:border-[#3B1DD1] transition-all duration-150 text-[14px]"
+          style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               handleGenerate();

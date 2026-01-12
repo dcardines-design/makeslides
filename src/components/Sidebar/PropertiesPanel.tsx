@@ -131,7 +131,8 @@ export default function PropertiesPanel() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search images..."
-                    className="w-full pl-9 pr-3 py-2 bg-[#0a0a0a] border border-[#262626] rounded-lg text-sm text-white placeholder-[#737373] focus:outline-none focus:border-[#3B1DD1]"
+                    className="w-full pl-9 pr-3 py-[8px] bg-[#0a0a0a] border border-[#2B2B2B] rounded-[10px] text-[14px] text-white placeholder-[#7D7D7D] focus:outline-none hover:border-[#3B1DD1]/50 focus:border-[#3B1DD1] transition-all duration-150"
+                    style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                   />
                 </div>
               </form>

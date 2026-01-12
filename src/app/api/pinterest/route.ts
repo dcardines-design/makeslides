@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import chromium from '@sparticuz/chromium';
-import { chromium as playwrightChromium } from 'playwright-core';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -14,100 +12,76 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid Pinterest URL' }, { status: 400 });
   }
 
-  let browser;
   try {
-    // Launch browser with serverless-compatible settings
-    const executablePath = await chromium.executablePath();
-
-    browser = await playwrightChromium.launch({
-      args: chromium.args,
-      executablePath,
-      headless: true,
+    // Fetch Pinterest page HTML
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Cache-Control': 'no-cache',
+      },
     });
 
-    const context = await browser.newContext({
-      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      viewport: { width: 1920, height: 1080 },
-    });
-
-    const page = await context.newPage();
-
-    // Navigate to Pinterest - use domcontentloaded for faster loading
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
-
-    // Wait for images to load
-    await page.waitForTimeout(2000);
-
-    // Scroll to load more images (reduced iterations for serverless)
-    for (let i = 0; i < 2; i++) {
-      await page.evaluate(() => {
-        window.scrollBy(0, window.innerHeight);
-      });
-      await page.waitForTimeout(1000);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Pinterest page: ${response.status}`);
     }
 
-    // Extract image URLs
-    const imageUrls = await page.evaluate(() => {
-      const images: string[] = [];
+    const html = await response.text();
+    const images: string[] = [];
 
-      // Get all images on the page
-      const imgElements = document.querySelectorAll('img');
+    // Method 1: Extract from __PWS_DATA__ script tag (Pinterest's initial data)
+    const pwsMatch = html.match(/<script[^>]*id="__PWS_DATA__"[^>]*>([^<]+)<\/script>/);
+    if (pwsMatch) {
+      try {
+        const data = JSON.parse(pwsMatch[1]);
+        extractImagesFromObject(data, images);
+      } catch (e) {
+        console.log('Failed to parse __PWS_DATA__');
+      }
+    }
 
-      imgElements.forEach((img) => {
-        const src = img.src || img.getAttribute('data-src') || '';
+    // Method 2: Extract from application/json script tags
+    const jsonScriptRegex = /<script[^>]*type="application\/json"[^>]*>([^<]+)<\/script>/g;
+    let jsonMatch;
+    while ((jsonMatch = jsonScriptRegex.exec(html)) !== null) {
+      try {
+        const data = JSON.parse(jsonMatch[1]);
+        extractImagesFromObject(data, images);
+      } catch (e) {
+        // Skip invalid JSON
+      }
+    }
 
-        // Filter for Pinterest CDN images (pinimg.com)
-        if (src.includes('pinimg.com') && src.includes('/')) {
-          // Skip very small thumbnails and icons
-          if (src.includes('/30x30/') || src.includes('/30x30_RS/') ||
-              src.includes('/75x75/') || src.includes('/75x75_RS/')) {
-            return;
-          }
+    // Method 3: Extract image URLs directly from HTML using regex
+    const imgRegex = /https:\/\/i\.pinimg\.com\/[^"'\s]+/g;
+    const imgMatches = html.match(imgRegex) || [];
+    for (const imgUrl of imgMatches) {
+      processImageUrl(imgUrl, images);
+    }
 
-          // Convert to high-res version (736x is a good balance)
-          let highRes = src
-            .replace('/236x/', '/736x/')
-            .replace('/474x/', '/736x/')
-            .replace('/564x/', '/736x/')
-            .replace('/170x/', '/736x/');
-
-          // Remove any query params
-          highRes = highRes.split('?')[0];
-
-          if (highRes && !images.includes(highRes)) {
-            images.push(highRes);
-          }
-        }
-      });
-
-      return images;
-    });
-
-    await browser.close();
+    // Deduplicate and limit
+    const uniqueImages = [...new Set(images)].slice(0, 30);
 
     // Format results
-    const results = imageUrls.slice(0, 30).map((url, index) => {
-      // Generate small thumbnail by replacing size in URL
-      const small = url.replace('/736x/', '/236x/').replace('/originals/', '/236x/');
+    const results = uniqueImages.map((imgUrl, index) => {
+      const small = imgUrl.replace('/736x/', '/236x/').replace('/originals/', '/236x/');
       return {
         id: `pinterest-${index}`,
         urls: {
-          regular: url,
+          regular: imgUrl,
           small: small,
         },
         alt_description: 'Pinterest image',
       };
     });
 
-    console.log(`Pinterest scrape found ${imageUrls.length} images, returning ${results.length}`);
+    console.log(`Pinterest scrape found ${uniqueImages.length} images`);
 
     return NextResponse.json({ results });
 
   } catch (error) {
     console.error('Pinterest scrape error:', error);
-    if (browser) {
-      await browser.close();
-    }
     return NextResponse.json(
       { error: 'Failed to fetch Pinterest images', results: [] },
       { status: 500 }
@@ -115,5 +89,49 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Increase timeout for this route
-export const maxDuration = 60;
+function extractImagesFromObject(obj: unknown, images: string[]): void {
+  if (!obj || typeof obj !== 'object') return;
+
+  if (Array.isArray(obj)) {
+    for (const item of obj) {
+      extractImagesFromObject(item, images);
+    }
+    return;
+  }
+
+  const record = obj as Record<string, unknown>;
+
+  // Check for image URL properties
+  for (const key of Object.keys(record)) {
+    const value = record[key];
+
+    if (typeof value === 'string' && value.includes('pinimg.com')) {
+      processImageUrl(value, images);
+    } else if (typeof value === 'object' && value !== null) {
+      extractImagesFromObject(value, images);
+    }
+  }
+}
+
+function processImageUrl(url: string, images: string[]): void {
+  // Skip small thumbnails
+  if (url.includes('/30x30/') || url.includes('/75x75/') ||
+      url.includes('/30x30_RS/') || url.includes('/75x75_RS/')) {
+    return;
+  }
+
+  // Convert to high-res version
+  let highRes = url
+    .replace('/236x/', '/736x/')
+    .replace('/474x/', '/736x/')
+    .replace('/564x/', '/736x/')
+    .replace('/170x/', '/736x/')
+    .replace('/140x140/', '/736x/')
+    .split('?')[0]; // Remove query params
+
+  if (highRes && !images.includes(highRes)) {
+    images.push(highRes);
+  }
+}
+
+export const maxDuration = 30;
